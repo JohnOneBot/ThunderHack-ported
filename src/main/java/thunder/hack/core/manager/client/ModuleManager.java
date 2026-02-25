@@ -19,7 +19,6 @@ import thunder.hack.features.modules.player.*;
 import thunder.hack.features.modules.render.Particles;
 import thunder.hack.features.modules.render.*;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -262,16 +261,11 @@ public class ModuleManager implements IManager {
     public static RPC rpc = new RPC();
 
     public ModuleManager() {
-        for (Field field : getClass().getDeclaredFields()) {
-            if (Module.class.isAssignableFrom(field.getType())) {
-                field.setAccessible(true);
-                try {
-                    modules.add((Module) field.get(this));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        // Menu-base only bootstrap for 1.21.11 porting branch:
+        // keep only GUI/editor modules and skip gameplay/utility modules.
+        modules.add(clickGui);
+        modules.add(hudEditor);
+        modules.add(thunderHackGui);
     }
 
     public Module get(String name) {
@@ -320,9 +314,10 @@ public class ModuleManager implements IManager {
         });
 
         if (ConfigManager.firstLaunch) {
-            ModuleManager.notifications.enable();
-            rpc.enable();
-            soundFX.enable();
+            // Keep first launch minimal in menu-base mode.
+            clickGui.disable();
+            hudEditor.disable();
+            thunderHackGui.disable();
         }
     }
 
