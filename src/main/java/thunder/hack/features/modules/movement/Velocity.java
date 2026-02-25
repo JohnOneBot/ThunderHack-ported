@@ -62,7 +62,7 @@ public class Velocity extends Module {
 
         // MAIN VELOCITY
         if (e.getPacket() instanceof EntityVelocityUpdateS2CPacket pac) {
-            if (pac.id() == mc.player.getId() && (!onlyAura.getValue() || ModuleManager.aura.isEnabled())) {
+            if (pac.getId() == mc.player.getId() && (!onlyAura.getValue() || ModuleManager.aura.isEnabled())) {
                 switch (mode.getValue()) {
                     case Matrix -> {
                         if (!flag) {
